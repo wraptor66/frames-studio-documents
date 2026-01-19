@@ -1,0 +1,54 @@
+# Python Module Policy & Security Restrictions
+
+Framesweb v2.0 executes user-provided Python code in a restricted environment to protect the host system and maintain security.  
+Only explicitly approved modules may be imported in components of type `pythoncode`.
+
+## Allowed Modules
+
+### Tier 1 – Core (Always Available)
+These modules are inherently safe and available in all environments:
+
+- `json` – JSON parsing/serialization
+- `datetime` – Date/time operations
+- `math` – Mathematical functions
+- `collections` – Specialized containers
+- `typing` – Type hints
+- `functools` – Higher-order functions
+- `itertools` – Efficient iterators
+- `re` – Regular expressions
+- `uuid` – UUID generation
+- `decimal` – Precise decimal arithmetic
+
+### Tier 2 – Approved Extensions
+These modules are permitted after security review and are suitable for most integration needs:
+
+- `requests` – HTTP requests to external APIs
+- `pyodbc` – Database connections (e.g., SQL Server)
+- `pandas` – Data analysis and manipulation
+
+### Tier 3 – Customer-Specific (Self-Hosted Only)
+Self-hosted customers may extend the allowed list locally by modifying their instance of the `python_code_validator` component or execution wrapper in `requestprocessing.py`.  
+Common Tier 3 examples include:
+
+- `numpy` – Numerical computing
+- `beautifulsoup4` – HTML parsing
+- `plotly` / `matplotlib` – Visualization
+- `openpyxl` – Excel file handling
+- `sqlalchemy` – ORM-style database access
+
+**Important**: Adding Tier 3 modules increases risk and should only be performed by trusted administrators.
+
+## How Restrictions Are Enforced
+
+- **Pre-save** (UI submission): Static analysis rejects disallowed imports and dangerous patterns.
+- **Pre-execution** (runtime): The same checks are re-applied, even for code inserted directly into the database.
+- **Import checking**: Uses Python's `ast` module to detect imports and ensure only approved modules are used.
+
+## Requesting New Modules
+
+- Hosted/evaluation instances: Submit a request via support with justification and intended use.
+- Self-hosted deployments: Extend the allowlist in your local validator component.
+
+**Security Philosophy**  
+Framesweb prioritizes safety by default. Restrictions protect the host while enabling powerful, data-driven components.  
+All policies are documented and configurable for self-hosted environments.
